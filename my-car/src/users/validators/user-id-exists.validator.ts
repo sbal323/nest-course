@@ -15,11 +15,7 @@ export class UserIdExistsValidator{
     const exist = await this.service.findOne(id);
 
     if(!exist){
-      result.statusCode = HttpStatus.NOT_FOUND;
-      result.error = "User with provided id does not exist";
-      //throw new NotFoundException("User with provided id does not exist");
-
-      return false;
+      throw new NotFoundException("User with provided id does not exist");
     }
 
     this.user = exist;

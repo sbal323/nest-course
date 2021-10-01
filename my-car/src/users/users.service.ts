@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppHasher } from 'src/core/app-hasher';
+import { mapObject } from 'src/core/map-object';
 import { Repository } from 'typeorm';
-import { UserResult } from './results/user.result';
+import { UserDto, UserResult } from './results/user.result';
 import { User } from './user.entity';
 import { UserEmailExistsValidator } from './validators/user-email-exists.validator';
 import { UserIdExistsValidator } from './validators/user-id-exists.validator';
@@ -21,8 +22,7 @@ export class UsersService {
     if( await validator.isValid(result, email)){
       const user = this.repository.create({email, password: await this.hasher.getHash(password)});
 
-      result.user = await this.repository.save(user);
-      result.user.password = "XXX-XXX";
+      mapObject<UserDto>(result.user, await this.repository.save(user));
     }
 
     return result;
@@ -41,8 +41,7 @@ export class UsersService {
     const validator = new UserIdExistsValidator(this);
 
     if( await validator.isValid(result, id)){
-      result.user = validator.user;
-      result.user.password = "XXX-XXX";
+      mapObject<UserDto>(result.user, validator.user);
     }
 
     return result;
@@ -59,9 +58,7 @@ export class UsersService {
       if(value.password){
         validator.user.password = await this.hasher.getHash(value.password);
       }
-
-      result.user = await this.repository.save(validator.user);
-      result.user.password = "XXX-XXX";
+      mapObject<UserDto>(result.user, await this.repository.save(validator.user));
     }
 
     return result;
@@ -72,8 +69,7 @@ export class UsersService {
     const validator = new UserIdExistsValidator(this);
 
     if( await validator.isValid(result, id)){
-      result.user = await this.repository.remove(validator.user);
-      result.user.password = "XXX-XXX";
+      mapObject<UserDto>(result.user, await this.repository.remove(validator.user));
     }
 
     return result;

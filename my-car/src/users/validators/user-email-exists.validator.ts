@@ -1,6 +1,6 @@
 import { UsersService } from "../users.service";
 import { Response } from 'express';
-import { HttpStatus } from "@nestjs/common";
+import { BadRequestException, HttpStatus, NotFoundException } from "@nestjs/common";
 import { BaseResult } from "src/core/base-response";
 
 export class UserEmailExistsValidator{
@@ -13,10 +13,7 @@ export class UserEmailExistsValidator{
     const exist = await this.service.find(email);
 
     if(!exist || exist.length > 0){
-      result.statusCode = HttpStatus.BAD_REQUEST;
-      result.error = "User with provided email already registered";
-
-      return false;
+      throw new BadRequestException("User with provided email already registered");
     }
 
     return true;
