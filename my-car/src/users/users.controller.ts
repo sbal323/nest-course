@@ -6,14 +6,15 @@ import { UsersService } from './users.service';
 import { Response } from 'express';
 import { UpdateUserParams } from './params/update-user.param';
 import { ProcessResponseInterceptor } from 'src/interceptors/process-response.interceptor';
+import { BaseController } from 'src/core/base.controlller';
 
 
 @ApiTags("Auth")
 @Controller('auth')
-@UseInterceptors(ProcessResponseInterceptor)
-export class UsersController{
+export class UsersController extends BaseController{
 
   constructor(private logger: AppLogger, private service: UsersService){
+    super();
     logger.setContext("Users Controller");
   }
 

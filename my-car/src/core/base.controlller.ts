@@ -1,8 +1,10 @@
-import { HttpStatus, Inject, Res } from '@nestjs/common';
+import { HttpStatus, Inject, Res, UseInterceptors } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { Response } from 'express';
+import { ProcessResponseInterceptor } from 'src/interceptors/process-response.interceptor';
 import { BaseResult } from './base-response';
 
+@UseInterceptors(ProcessResponseInterceptor)
 export class BaseController{
 
   constructor() {}
